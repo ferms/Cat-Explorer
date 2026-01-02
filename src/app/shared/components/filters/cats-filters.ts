@@ -1,4 +1,4 @@
-import { Component, inject, output, ViewEncapsulation } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, output, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 
@@ -6,7 +6,10 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 import { SelectModule } from 'primeng/select';
 
-type Topic = { label: string; value: string };
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CatsApiService } from '@core/services/cats-api.service';
+
+type BreedOption = { label: string; value: string };
 type Sort = { label: string; value: 'az' | 'za' | 'pop' };
 
 @Component({
@@ -25,10 +28,12 @@ type Sort = { label: string; value: 'az' | 'za' | 'pop' };
         <p-multiSelect
           class="cats-filters__pill"
           formControlName="topics"
-          [options]="topics"
+          [options]="breedOptions"
           optionLabel="label"
           optionValue="value"
-          placeholder="TOPIC"
+          placeholder="BREED"
+          [filter]="true"
+          filterPlaceholder="Search breed..."
           [showToggleAll]="false"
           [maxSelectedLabels]="1"
           display="chip"
@@ -47,12 +52,14 @@ type Sort = { label: string; value: 'az' | 'za' | 'pop' };
   `,
   styleUrls: ['./cats-filters.scss'],
 })
-export class CatsFiltersComponent {
+export class CatsFiltersComponent implements OnInit {
   qChange = output<string>();
-  topicsChange = output<string[]>();
+  breedIdsChange = output<string[]>();
   sortChange = output<'az' | 'za' | 'pop'>();
 
   private readonly fb = inject(FormBuilder);
+  private readonly api = inject(CatsApiService);
+  private readonly destroyRef = inject(DestroyRef);
 
   form = this.fb.group({
     q: [''],
@@ -60,11 +67,7 @@ export class CatsFiltersComponent {
     sort: ['az' as Sort['value']],
   });
 
-  topics: Topic[] = [
-    { label: 'Active', value: 'active' },
-    { label: 'Calm', value: 'calm' },
-    { label: 'Family', value: 'family' },
-  ];
+  breedOptions: BreedOption[] = [];
 
   sorts: Sort[] = [
     { label: 'Name (A-Z)', value: 'az' },
@@ -73,11 +76,20 @@ export class CatsFiltersComponent {
   ];
 
   ngOnInit() {
+    this.api
+      .getBreedOptions()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (opts) => (this.breedOptions = opts ?? []),
+        error: () => (this.breedOptions = []),
+      });
+
     this.form.controls.q.valueChanges
       .pipe(debounceTime(200), distinctUntilChanged())
       .subscribe(v => this.qChange.emit(String(v ?? '')));
 
-    this.form.controls.topics.valueChanges.subscribe(v => this.topicsChange.emit(v ?? []));
+    this.form.controls.topics.valueChanges.subscribe(v => this.breedIdsChange.emit(v ?? []));
+
     this.form.controls.sort.valueChanges.subscribe(v => this.sortChange.emit((v ?? 'az') as any));
   }
 }

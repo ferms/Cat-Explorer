@@ -9,26 +9,6 @@
   color: var(--primary-color); // tu azul del login
 }
 
-/* Botones de navegación */
-.nav-btn {
-  margin-left: 0.5rem;
-  background: transparent;
-  border: none;
-  color: var(--primary-color);
-  font-weight: 500;
-
-  &:hover {
-    background: rgba(0, 0, 255, 0.05);
-  }
-}
-
-/* Botón tipo CTA (Login) */
-.nav-btn.outlined {
-  border: 1px solid var(--primary-color);
-  border-radius: 999px;
-  padding: 0.4rem 1rem;
-}
-
 /* Contenedor principal */
 .app-container {
   padding-top: 80px; // espacio para el toolbar fixed

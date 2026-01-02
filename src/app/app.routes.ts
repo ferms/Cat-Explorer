@@ -38,16 +38,21 @@ export const routes: Routes = [
   {
     path: '',
     component: ShellComponent,
-    canActivate: [authGuard], // 🔥 BLOQUEA TODO SI NO HAY LOGIN
+    canActivate: [authGuard],
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'cats' },
-
-      // aquí luego van cats, profile, etc
       {
         path: 'cats',
         loadComponent: () =>
-          import('@layout/dashboard/cats-dashboard.page').then(
+          import('@ui/dashboard/cats-dashboard.page').then(
             m => m.CatsDashboardPage
+          ),
+      },
+      {
+        path: 'cats/:id',
+        loadComponent: () =>
+          import('@ui/dashboard/detail/cats-detail.page').then(
+            m => m.CatDetailPage
           ),
       },
     ],

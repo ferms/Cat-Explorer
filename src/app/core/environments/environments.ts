@@ -14,6 +14,7 @@ export const environment = {
       breedById: (id: string) => `/cats/breeds/${id}`,
       breedImages: (id: string) => `/cats/breeds/${id}/images`,
       breedsTable: '/cats/breeds-table',
+      breedsOptions: '/cats/breeds/options'
   }
   },
 };

@@ -12,10 +12,7 @@ body {
     'Segoe UI', Roboto, sans-serif;
 }
 
-body {
-  background: #f9f5f1;
-  -webkit-font-smoothing: antialiased;
-}
+
 
 /* PrimeNG card tweak */
 .p-card {

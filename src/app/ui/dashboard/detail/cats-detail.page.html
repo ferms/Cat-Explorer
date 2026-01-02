@@ -1,0 +1,180 @@
+<section class="max-w-6xl mx-auto px-8 py-10 space-y-8">
+  <!-- Top bar -->
+  <div class="flex items-center justify-between gap-4">
+    <button
+      pButton
+      type="button"
+      icon="pi pi-arrow-left"
+      label="Back"
+      class="p-button-text"
+      (click)="goBack()"
+    ></button>
+
+    @if (breed()) {
+      <div class="flex items-center gap-3">
+        <p-tag [value]="breed()!.origin || 'Unknown'"></p-tag>
+        @if (breed()!.rare) {
+          <p-tag danger="warning" value="Rare"></p-tag>
+        }
+      </div>
+    }
+  </div>
+
+  @if (loading()) {
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <!-- Left: image carousel skeleton -->
+      <div class="space-y-4">
+        <div class="rounded-2xl overflow-hidden shadow bg-slate-50">
+          <p-skeleton height="420px" width="100%"></p-skeleton>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <p-skeleton width="180px" height="14px"></p-skeleton>
+          <p-skeleton width="140px" height="14px"></p-skeleton>
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div class="space-y-3">
+          <p-skeleton width="55%" height="34px"></p-skeleton>
+          <p-skeleton width="35%" height="16px"></p-skeleton>
+        </div>
+
+        <div class="space-y-2">
+          <p-skeleton width="100%" height="14px"></p-skeleton>
+          <p-skeleton width="95%" height="14px"></p-skeleton>
+          <p-skeleton width="88%" height="14px"></p-skeleton>
+          <p-skeleton width="92%" height="14px"></p-skeleton>
+        </div>
+
+        <div class="flex flex-wrap gap-2">
+          @for (i of [1,2,3,4,5]; track i) {
+            <p-skeleton width="90px" height="32px" styleClass="rounded-full"></p-skeleton>
+          }
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          @for (i of [1,2,3,4]; track i) {
+            <div class="rounded-2xl border p-4 bg-white">
+              <p-skeleton width="40%" height="12px"></p-skeleton>
+              <div class="mt-2">
+                <p-skeleton width="140px" height="18px"></p-skeleton>
+              </div>
+            </div>
+          }
+        </div>
+
+        <p-skeleton width="140px" height="16px"></p-skeleton>
+      </div>
+    </div>
+  }
+
+  @if (!loading() && error()) {
+    <div class="rounded-2xl border p-6 bg-white">
+      <h2 class="text-xl font-bold mb-2">Oops 😿</h2>
+      <p class="text-gray-600">{{ error() }}</p>
+
+      <div class="mt-4">
+        <button
+          pButton
+          type="button"
+          icon="pi pi-refresh"
+          label="Retry"
+          (click)="load()"
+        ></button>
+      </div>
+    </div>
+  }
+
+  @if (!loading() && !error() && breed()) {
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+      <div class="space-y-4">
+        @if (images().length) {
+          <p-carousel
+            [value]="images()"
+            [numVisible]="1"
+            [numScroll]="1"
+            [circular]="true"
+            [autoplayInterval]="0"
+            class="rounded-2xl overflow-hidden shadow"
+          >
+            <ng-template pTemplate="item" let-img>
+              <img
+                class="w-full h-[420px] object-cover"
+                [src]="img.url"
+                [alt]="breed()!.name"
+              />
+            </ng-template>
+          </p-carousel>
+        } @else {
+          <img
+            class="w-full h-[420px] object-cover rounded-2xl shadow"
+            [src]="'/assets/img/cats/placeholder.jpg'"
+            [alt]="breed()!.name"
+          />
+        }
+
+        <div class="text-sm text-gray-500">
+          Life span:
+          <span class="font-semibold text-gray-700">{{ breed()!.life_span }}</span> years ·
+          Weight:
+          <span class="font-semibold text-gray-700">{{ breed()!.weight_metric || '—' }}</span> kg
+        </div>
+      </div>
+
+      <div class="space-y-6">
+        <div>
+          <h1 class="text-4xl font-extrabold tracking-tight">{{ breed()!.name }}</h1>
+          @if (breed()!.subtitle) {
+            <p class="mt-2 text-gray-600">{{ breed()!.subtitle }}</p>
+          }
+        </div>
+
+        <p class="text-gray-700 leading-relaxed">
+          {{ breed()!.description || 'No description available.' }}
+        </p>
+
+        @if (temperaments().length) {
+          <div class="flex flex-wrap gap-2">
+            @for (t of temperaments(); track t) {
+              <p-chip [label]="t"></p-chip>
+            }
+          </div>
+        }
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="rounded-2xl border p-4 bg-white">
+            <div class="text-sm text-gray-500 mb-1">Intelligence</div>
+            <p-rating [ngModel]="breed()?.intelligence ?? 0" [readonly]="true"></p-rating>
+          </div>
+
+          <div class="rounded-2xl border p-4 bg-white">
+            <div class="text-sm text-gray-500 mb-1">Affection</div>
+            <p-rating [ngModel]="breed()?.affection_level ?? 0" [readonly]="true"></p-rating>
+          </div>
+
+          <div class="rounded-2xl border p-4 bg-white">
+            <div class="text-sm text-gray-500 mb-1">Energy</div>
+            <p-rating [ngModel]="breed()?.energy_level ?? 0" [readonly]="true"></p-rating>
+          </div>
+
+          <div class="rounded-2xl border p-4 bg-white">
+            <div class="text-sm text-gray-500 mb-1">Adaptability</div>
+            <p-rating [ngModel]="breed()?.adaptability ?? 0" [readonly]="true"></p-rating>
+          </div>
+        </div>
+
+        @if (breed()!.wikipedia_url) {
+          <a
+            class="inline-flex items-center gap-2 text-primary-600 hover:underline"
+            [href]="breed()!.wikipedia_url!"
+            target="_blank"
+            rel="noopener"
+          >
+            Learn more <i class="pi pi-external-link text-sm"></i>
+          </a>
+        }
+      </div>
+    </div>
+  }
+</section>

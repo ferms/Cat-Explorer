@@ -1,0 +1,48 @@
+    <section class="px-8 py-10 space-y-10 max-w-7xl mx-auto">
+      <header class="space-y-4 max-w-3xl">
+        <h1 class="text-5xl font-extrabold tracking-tight">Discover cat breeds</h1>
+        <p class="text-lg text-gray-600">
+          Explore detailed information about different cat breeds and find your perfect companion.
+        </p>
+      </header>
+
+      <cats-filters
+        (qChange)="store.setSearch($event)"
+        (breedIdsChange)="store.setBreedIds($event)"
+        (sortChange)="store.setSort($event)"
+      />
+
+      <section class="pt-10 grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        @if (store.isLoading()) { @for (i of [1,2,3,4,5,6,7,8,9]; track i) {
+        <article class="rounded-3xl bg-slate-50 overflow-hidden shadow-sm">
+          <div class="relative h-56">
+            <p-skeleton height="100%" width="100%"></p-skeleton>
+          </div>
+
+          <div class="p-6 space-y-3">
+            <p-skeleton width="30%" height="12px"></p-skeleton>
+            <p-skeleton width="70%" height="18px"></p-skeleton>
+            <p-skeleton width="55%" height="14px"></p-skeleton>
+          </div>
+        </article>
+        } } @else { @for (cat of store.viewBreeds(); track cat.id) {
+        <cats-card
+          [title]="cat.name"
+          [subtitle]="cat.subtitle"
+          [image]="cat.image || '/assets/img/cats/placeholder.jpg'"
+          (click)="goToDetail(cat.id)"
+          onKeyPress
+        />
+        } }
+      </section>
+
+      <div class="pt-4">
+        <p-paginator
+          [first]="(store.page() - 1) * store.pageSize()"
+          [rows]="store.pageSize()"
+          [totalRecords]="store.total()"
+          [rowsPerPageOptions]="[9, 18, 27]"
+          (onPageChange)="onPage($event)"
+        ></p-paginator>
+      </div>
+    </section>

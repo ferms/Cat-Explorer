@@ -169,17 +169,57 @@ function pickSubtitle(b) {
 // ======================
 
 // GET /api/cats/breeds
-// GET /api/cats/breeds?limit=12
+// GET /api/cats/breeds?page=1&limit=9&q=abys&sort=az&breedIds=abys,beng
 server.get('/api/cats/breeds', requireAuth, async (req, res) => {
   try {
-    const limit = Math.min(Math.max(Number(req.query.limit || 12), 1), 36);
+    const page = Math.max(Number(req.query.page || 1), 1);     // 1-based
+    const limit = Math.min(Math.max(Number(req.query.limit || 9), 1), 27);
+
+    const q = String(req.query.q || '').trim().toLowerCase();
+    const sort = String(req.query.sort || 'az'); // az | za | pop
+
+    const breedIdsRaw = String(req.query.breedIds || '').trim();
+    const breedIds = breedIdsRaw
+      ? breedIdsRaw.split(',').map(s => s.trim()).filter(Boolean)
+      : [];
 
     const breeds = await catFetch('/breeds');
-    const sliced = breeds.slice(0, limit);
 
-    // trae 1 imagen por raza (en paralelo, con tolerancia a fallos)
+    // 1) filter by q
+    let filtered = q
+      ? breeds.filter(b =>
+          `${b.name} ${b.origin || ''} ${b.temperament || ''}`
+            .toLowerCase()
+            .includes(q)
+        )
+      : breeds;
+
+    // 2) filter by selected breeds (ids)
+    if (breedIds.length) {
+      const set = new Set(breedIds);
+      filtered = filtered.filter(b => set.has(b.id));
+    }
+
+    // 3) sort
+    filtered = [...filtered].sort((a, b) => {
+      if (sort === 'za') return String(b.name).localeCompare(String(a.name));
+      if (sort === 'pop') {
+        const pa = (a.intelligence || 0) + (a.affection_level || 0);
+        const pb = (b.intelligence || 0) + (b.affection_level || 0);
+        return pb - pa;
+      }
+      return String(a.name).localeCompare(String(b.name)); // az
+    });
+
+    const total = filtered.length;
+
+    // 4) pagination
+    const start = (page - 1) * limit;
+    const pageItems = filtered.slice(start, start + limit);
+
+    // 5) images (solo para los de la página)
     const withImages = await Promise.all(
-      sliced.map(async (b) => {
+      pageItems.map(async (b) => {
         try {
           const imgs = await catFetch('/images/search', {
             limit: 1,
@@ -194,11 +234,33 @@ server.get('/api/cats/breeds', requireAuth, async (req, res) => {
       })
     );
 
-    res.status(200).json(withImages);
+    res.status(200).json({
+      data: withImages,
+      total,
+      page,
+      limit,
+    });
   } catch (e) {
     res.status(502).json({ message: 'Error consultando TheCatAPI', detail: String(e.message || e) });
   }
 });
+
+
+// GET /api/cats/breeds/options  (para filtros)
+server.get('/api/cats/breeds/options', requireAuth, async (req, res) => {
+  try {
+    const breeds = await catFetch('/breeds');
+
+    const options = breeds
+      .map(b => ({ label: b.name, value: b.id }))
+      .sort((a, b) => a.label.localeCompare(b.label));
+
+    return res.status(200).json(options);
+  } catch (e) {
+    return res.status(502).json({ message: 'Error consultando TheCatAPI', detail: String(e.message || e) });
+  }
+});
+
 
 
 // GET /api/cats/breeds/search?q=...

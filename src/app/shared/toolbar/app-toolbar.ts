@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
@@ -18,6 +18,13 @@ export class AppToolbarComponent {
 
   readonly user = this.auth.user;
   readonly isLoggedIn = this.auth.isLoggedIn;
+
+  readonly isScrolled = signal(false);
+
+  @HostListener('window:scroll')
+  onScroll() {
+    this.isScrolled.set(window.scrollY > 8);
+  }
 
   readonly initials = computed(() => {
     const name = this.user()?.name?.trim();
