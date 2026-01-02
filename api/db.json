@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "name": "Demo User",
+      "email": "demo@demo.com",
+      "username": "demo",
+      "password": "123456"
+    },
+    {
+      "id": 2,
+      "name": "Admin Demo",
+      "email": "admin@demo.com",
+      "username": "Admin",
+      "password": "admin123",
+      "createdAt": "2026-01-01T19:29:42.056Z"
+    },
+    {
+      "id": 3,
+      "name": "Fer",
+      "email": "ferna.rm1@yopmail.com",
+      "username": "ferna.rm1",
+      "password": "@2026T",
+      "createdAt": "2026-01-01T20:25:26.104Z",
+      "updatedAt": "2026-01-01T20:25:52.107Z"
+    }
+  ]
+}

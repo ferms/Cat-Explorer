@@ -1,0 +1,57 @@
+.app-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+
+ background: #0B42FF;
+
+  backdrop-filter: blur(10px);
+  border: none;
+  box-shadow: none;
+
+  padding: 0.75rem 2rem;
+}
+
+/* PrimeNG override */
+.app-toolbar.p-toolbar {
+  background: #0B42FF;
+
+  border: none;
+}
+
+/* Title */
+.app-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* User area */
+.user-area {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-name {
+  color: #ffffff;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.user-avatar {
+  cursor: pointer;
+}
+
+/* Logout button */
+.logout-btn {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+}

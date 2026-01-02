@@ -1,0 +1,26 @@
+<p-toolbar class="app-toolbar">
+  <div class="p-toolbar-group-left">
+    <span class="app-title">Cat Breeds Explorer</span>
+  </div>
+
+  @if (isLoggedIn()) {
+    <div class="p-toolbar-group-right user-area">
+      <span class="user-name">{{ user()?.name }}</span>
+
+      <p-avatar
+        [label]="initials()"
+        shape="circle"
+        size="large"
+        class="user-avatar"
+      ></p-avatar>
+
+      <button
+        pButton
+        icon="pi pi-sign-out"
+        class="logout-btn"
+        (click)="logout()"
+        aria-label="Logout"
+      ></button>
+    </div>
+  }
+</p-toolbar>
