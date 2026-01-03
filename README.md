@@ -11,6 +11,7 @@ El proyecto cumple con los lineamientos de una **prueba técnica Frontend Senior
 | Tecnología | Versión | Uso |
 |-----------|--------|-----|
 | **Angular** | ^21.0.x | Framework principal, standalone + signals |
+| **Node.js** | 20+ | (versión recomendada: LTS) |
 | **PrimeNG** | ^21.0.x | UI: Table, Carousel, Paginator, Forms |
 | **PrimeIcons** | ^7.0.0 | Iconografía |
 | **TailwindCSS** | ^4.x | Layout y utilidades visuales |
@@ -77,7 +78,7 @@ Ejecuta ambos procesos concurrentemente usando **concurrently**.
 - Persistencia de sesión en `localStorage`
 - JWT simulado
 
-✅ **Dashboard de razas**
+✅ **Dashboard de razas de gatos**
 - Listado paginado de razas de gatos
 - Filtros por:
   - Texto
