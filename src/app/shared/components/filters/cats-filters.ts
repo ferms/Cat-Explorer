@@ -17,39 +17,7 @@ type Sort = { label: string; value: 'az' | 'za' | 'pop' };
   selector: 'cats-filters',
   encapsulation: ViewEncapsulation.None,
   imports: [ReactiveFormsModule, InputTextModule, MultiSelectModule, SelectModule],
-  template: `
-    <div class="cats-filters" [formGroup]="form">
-      <div class="cats-filters__search">
-        <i class="pi pi-search"></i>
-        <input pInputText formControlName="q" placeholder="Search..." />
-      </div>
-
-      <div class="cats-filters__row">
-        <p-multiSelect
-          class="cats-filters__pill"
-          formControlName="topics"
-          [options]="breedOptions"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="BREED"
-          [filter]="true"
-          filterPlaceholder="Search breed..."
-          [showToggleAll]="false"
-          [maxSelectedLabels]="1"
-          display="chip"
-        ></p-multiSelect>
-
-        <p-select
-          class="cats-filters__pill"
-          formControlName="sort"
-          [options]="sorts"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="NAME (A-Z)"
-        ></p-select>
-      </div>
-    </div>
-  `,
+  templateUrl: './cats-filters.html',
   styleUrls: ['./cats-filters.scss'],
 })
 export class CatsFiltersComponent implements OnInit {
@@ -92,4 +60,29 @@ export class CatsFiltersComponent implements OnInit {
 
     this.form.controls.sort.valueChanges.subscribe(v => this.sortChange.emit((v ?? 'az') as any));
   }
+
+  hasActiveFilters(): boolean {
+    const { q, topics, sort } = this.form.getRawValue();
+    return (
+      !!q?.trim() ||
+      (topics?.length ?? 0) > 0 ||
+      sort !== 'az'
+    );
+  }
+
+  clearFilters() {
+    this.form.reset(
+      {
+        q: '',
+        topics: [],
+        sort: 'az',
+      },
+      { emitEvent: false }
+    );
+    this.qChange.emit('');
+    this.breedIdsChange.emit([]);
+    this.sortChange.emit('az');
+  }
+
+
 }

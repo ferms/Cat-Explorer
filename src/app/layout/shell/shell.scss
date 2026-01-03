@@ -2,14 +2,6 @@
   display: block;
 }
 
-/* Título */
-.app-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--primary-color); // tu azul del login
-}
-
-/* Contenedor principal */
 .app-container {
-  padding-top: 80px; // espacio para el toolbar fixed
+  padding-top: 80px; 
 }

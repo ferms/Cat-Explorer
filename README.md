@@ -1,59 +1,175 @@
-# CatBreedsExplorer
+# 🐱 Cat Breeds Explorer
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.4.
+**Aplicación de exploración de razas de gatos** desarrollada con **Angular 21** y **PrimeNG**, que permite autenticación de usuarios, listado paginado de razas, filtros avanzados, vista de detalle con carrusel de imágenes y visualización en tabla comparativa.
 
-## Development server
+El proyecto cumple con los lineamientos de una **prueba técnica Frontend Senior (Angular)**, incorporando arquitectura moderna con *standalone components*, *signals*, manejo de estado local, guards de autenticación, backend mock con Express y pruebas unitarias con **Vitest**.
 
-To start a local development server, run:
+---
 
+## 🚀 Tecnologías principales
+
+| Tecnología | Versión | Uso |
+|-----------|--------|-----|
+| **Angular** | ^21.0.x | Framework principal, standalone + signals |
+| **PrimeNG** | ^21.0.x | UI: Table, Carousel, Paginator, Forms |
+| **PrimeIcons** | ^7.0.0 | Iconografía |
+| **TailwindCSS** | ^4.x | Layout y utilidades visuales |
+| **RxJS** | ^7.8 | Manejo de streams |
+| **TypeScript** | ^5.9 | Tipado estricto |
+| **Express** | ^5.x | API mock REST |
+| **JWT** | — | Autenticación simulada |
+| **Vitest** | ^4.x | Pruebas unitarias |
+| **Angular SSR** | ^21 | Preparado para renderizado server-side |
+
+---
+
+
+## ⚙️ Instalación y ejecución
+
+### 1️⃣ Clonar el repositorio
 ```bash
-ng serve
+git clone https://github.com/tu-usuario/cat-breeds-explorer.git
+cd cat-breeds-explorer
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
+### 2️⃣ Instalar dependencias
 ```bash
-ng generate component component-name
+npm install
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
+### 3️⃣ Iniciar la API mock (Express o json-server)
 ```bash
-ng generate --help
+npm run api
+# o
+npx json-server --watch api/db.json --port 4300 --delay 300
 ```
 
-## Building
-
-To build the project run:
-
+### 4️⃣ Iniciar la aplicación Angular
 ```bash
-ng build
+npm run web
+```
+> Esto ejecuta `ng serve --proxy-config proxy.conf.json -o` y abre el panel en el navegador.
+
+### 5️⃣ Modo desarrollo completo (API + Web)
+```bash
+npm run dev
+```
+Ejecuta ambos procesos concurrentemente usando **concurrently**.
+
+---
+
+## 👤 Usuarios demo
+
+| Rol | Email | Contraseña |
+|------|--------|-------------|
+| **Administrador** | `admin@demo.com` | `admin123` |
+| **Usuario demo** | `demo@demo.com` | `123456` |
+
+> Estos usuarios están definidos en el archivo `api/db.json` dentro de la clave `"users"` y se utilizan para simular el login del sistema.
+
+---
+
+## 🧠 Funcionalidades implementadas
+
+✅ **Autenticación**
+- Login / Register / Forgot Password
+- Guards de ruta (`authGuard`, `guestGuard`)
+- Persistencia de sesión en `localStorage`
+- JWT simulado
+
+✅ **Dashboard de razas**
+- Listado paginado de razas de gatos
+- Filtros por:
+  - Texto
+  - Orden (A–Z, Z–A, popularidad)
+  - MultiSelect de razas
+- Skeleton loaders
+- Estado global manejado con **signals**
+
+✅ **Vista de detalle**
+- Información completa de la raza
+- Carrusel de imágenes
+- Ratings (inteligencia, energía, afecto)
+- Chips de temperamento
+- Navegación a tabla comparativa
+
+✅ **Tabla comparativa**
+- Vista en tabla con **PrimeNG Table**
+- Búsqueda local
+- Paginación
+- Highlight de la raza seleccionada
+- Navegación contextual (volver al detalle)
+
+✅ **Testing**
+- Pruebas unitarias con **Vitest**
+- Tests para:
+  - Servicios (`AuthService`, `CatsApiService`, `CatsStore`)
+  - Guards
+  - Páginas principales (Dashboard, Login, Register)
+- Mocks controlados y aislamiento de dependencias
+
+
+---
+
+## 🧱 Scripts disponibles
+
+| Script | Descripción |
+|--------|--------------|
+| `npm run api` | Levanta el servidor mock en `localhost:3000` |
+| `npm run web` | Inicia Angular con proxy y abre el navegador |
+| `npm run dev` | Ejecuta API y web en paralelo |
+| `npm run build` | Compila la app para producción |
+| `npm run watch` | Compila en modo observador |
+| `npm run start` | Alias de `ng serve` |
+
+---
+
+## 🧩 Estructura del proyecto
+
+```
+src/
+ ├── app/
+ │   ├── core/
+ │   │   ├── auth/        → auth.service, guards
+ │   │   ├── services/    → cats-api, cats-store
+ │   │   └── models/      → interfaces y tipos
+ │   ├── ui/
+ │   │   ├── auth/        → login, register
+ │   │   └── dashboard/  → list, detail, table
+ │   ├── shared/
+ │   │   ├── components/ → cards, filters
+ │   └── app.routes.ts
+ ├── assets/
+ └── environments/
+api/
+ └── server.js
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
+## 🧠 Decisiones técnicas clave
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+| Aspecto | Decisión |
+|--------|----------|
+| **Estado** | Signals + servicios (sin NgRx) |
+| **Arquitectura** | Standalone Components |
+| **UI** | PrimeNG + TailwindCSS |
+| **Autenticación** | JWT simulado + route guards |
+| **Backend** | API mock con Express |
+| **Testing** | Vitest (sin Karma / Jasmine) |
+| **SSR** | Preparado para Angular SSR |
 
-```bash
-ng test
-```
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
+## ⚠️ Pendiente
+- Pipeline CI/CD (no incluido).
 
-```bash
-ng e2e
-```
+---
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## 👨‍💻 Autor
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+**Fernando Montaño**  
+Frontend Engineer
+📧 contacto: fer.montanosa@gmail.com
+💼 [linkedin.com/in/fernandomontano](https://www.linkedin.com/in/fernando-monta%C3%B1o-651719200/)

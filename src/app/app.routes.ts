@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from '@core/auth/auth.guard';
 import { ShellComponent } from './layout/shell/shell';
+import { guestGuard } from '@core/auth/guest.guard';
 
 export const routes: Routes = [
   // ─────────────────────────────────────────────
@@ -8,21 +9,20 @@ export const routes: Routes = [
   // ─────────────────────────────────────────────
   {
     path: 'auth',
+    canActivate: [guestGuard],
     children: [
       {
         path: 'login',
-        loadComponent: () =>
-          import('@ui/auth/login/login').then(m => m.Login),
+        loadComponent: () => import('@ui/auth/login/login').then((m) => m.Login),
       },
       {
         path: 'register',
-        loadComponent: () =>
-          import('@ui/auth/register/register').then(m => m.Register),
+        loadComponent: () => import('@ui/auth/register/register').then((m) => m.Register),
       },
       {
         path: 'forgot-password',
         loadComponent: () =>
-          import('@ui/auth/forgot-password/forgot-password').then(m => m.ForgotPassword),
+          import('@ui/auth/forgot-password/forgot-password').then((m) => m.ForgotPassword),
       },
       {
         path: '',
@@ -36,7 +36,7 @@ export const routes: Routes = [
   // PRIVADA (APP)
   // ─────────────────────────────────────────────
   {
-    path: '',
+    path: 'app',
     component: ShellComponent,
     canActivate: [authGuard],
     children: [
@@ -44,16 +44,17 @@ export const routes: Routes = [
       {
         path: 'cats',
         loadComponent: () =>
-          import('@ui/dashboard/cats-dashboard.page').then(
-            m => m.CatsDashboardPage
-          ),
+          import('@ui/dashboard/cats-dashboard.page').then((m) => m.CatsDashboardPage),
+      },
+      {
+        path: 'cats/table',
+        loadComponent: () =>
+          import('@ui/dashboard/table/cats-table.page').then((m) => m.CatsTablePage),
       },
       {
         path: 'cats/:id',
         loadComponent: () =>
-          import('@ui/dashboard/detail/cats-detail.page').then(
-            m => m.CatDetailPage
-          ),
+          import('@ui/dashboard/detail/cats-detail.page').then((m) => m.CatDetailPage),
       },
     ],
   },

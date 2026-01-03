@@ -29,7 +29,7 @@ import { SkeletonModule } from 'primeng/skeleton';
     SkeletonModule,
     ProgressSpinnerModule,
   ],
-   templateUrl: './cats-detail.page.html',
+  templateUrl: './cats-detail.page.html',
 })
 export class CatDetailPage implements OnInit {
   private readonly api = inject(CatsApiService);
@@ -85,10 +85,13 @@ export class CatDetailPage implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/cats']);
+    this.router.navigate(['/app/cats']);
   }
-  goTable() {
-  this.router.navigate(['/cats/table']);
-}
 
+  goTable() {
+    const id = this.breed()?.id;
+    this.router.navigate(['/app/cats/table'], {
+      queryParams: id ? { from: id } : undefined,
+    });
+  }
 }

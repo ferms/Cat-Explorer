@@ -10,7 +10,7 @@ import { SkeletonModule } from 'primeng/skeleton';
 @Component({
   standalone: true,
   imports: [CatsCardComponent, CatsFiltersComponent, PaginatorModule, SkeletonModule],
-   templateUrl: './cats-dashboard.page.html',
+  templateUrl: './cats-dashboard.page.html',
 })
 export class CatsDashboardPage implements OnInit {
   readonly store = inject(CatsStore);
@@ -26,7 +26,12 @@ export class CatsDashboardPage implements OnInit {
   }
 
   goToDetail(id: string) {
-    console.log('%c⧭', 'color: #1eff00', id);
-    this.router.navigate(['/cats', id]);
+    this.router.navigate(['/app/cats', id]);
+  }
+  clearAll() {
+    this.store.setSearch('');
+    this.store.setBreedIds([]);
+    this.store.setSort('az');
+    this.store.setPage(1);
   }
 }

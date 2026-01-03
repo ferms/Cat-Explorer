@@ -1,0 +1,53 @@
+<div class="flex flex-col gap-5" [formGroup]="form">
+  <!-- Search + Clear -->
+  <div class="flex items-center gap-3">
+    <div class="relative w-full">
+      <i
+        class="pi pi-search absolute right-4 top-1/2 -translate-y-1/2 opacity-55 pointer-events-none text-[1.1rem]"
+      ></i>
+
+      <input
+        pInputText
+        formControlName="q"
+        placeholder="Search..."
+        class="w-full h-14 rounded-full border border-slate-200 bg-white px-6 pr-14 text-base hover:border-slate-300 focus:outline-none focus:border-slate-300 focus:ring-4 focus:ring-slate-200/60"
+      />
+    </div>
+
+    @if (hasActiveFilters()) {
+    <button
+      type="button"
+      (click)="clearFilters()"
+      class="h-14 shrink-0 rounded-full border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-600 hover:border-slate-300 hover:text-slate-900 hover:bg-slate-50 transition"
+    >
+      Clear
+    </button>
+    }
+  </div>
+
+  <!-- Row -->
+  <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <p-multiSelect
+      class="cats-pill md:w-[260px]"
+      formControlName="topics"
+      [options]="breedOptions"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="BREED"
+      [filter]="true"
+      filterPlaceholder="Search breed..."
+      [showToggleAll]="false"
+      [maxSelectedLabels]="1"
+      display="chip"
+    ></p-multiSelect>
+
+    <p-select
+      class="cats-pill md:w-[260px]"
+      formControlName="sort"
+      [options]="sorts"
+      optionLabel="label"
+      optionValue="value"
+      placeholder="NAME (A-Z)"
+    ></p-select>
+  </div>
+</div>

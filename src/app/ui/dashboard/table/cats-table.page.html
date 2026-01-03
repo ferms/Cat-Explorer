@@ -1,0 +1,97 @@
+<section class="max-w-7xl mx-auto px-8 py-10 space-y-6">
+  <div class="flex items-center justify-between gap-3">
+    <h1 class="text-2xl font-bold">Breeds table</h1>
+    <button
+      pButton
+      type="button"
+      icon="pi pi-arrow-left"
+      label="Back"
+      class="p-button-text"
+      (click)="goBack()"
+    ></button>
+  </div>
+
+<div class="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-3 items-end">
+
+  <span class="p-input-icon-left w-full">
+    <input
+      pInputText
+      class="w-full h-11"
+      placeholder="Search in table..."
+      [ngModel]="termDraft()"
+      (ngModelChange)="termDraft.set($event)"
+    />
+  </span>
+
+  <div class="flex gap-2 justify-start sm:justify-end">
+    <button
+      pButton
+      type="button"
+      label="Search"
+      icon="pi pi-filter"
+      class="h-11"
+      (click)="search()"
+    ></button>
+
+    <button
+      pButton
+      type="button"
+      label="Clear"
+      icon="pi pi-times"
+      class="p-button-outlined h-11"
+      (click)="clear()"
+    ></button>
+  </div>
+</div>
+
+  @if (loading()) {
+    <div class="flex justify-center py-16">
+      <p-progressSpinner></p-progressSpinner>
+    </div>
+  } @else if (error()) {
+    <div class="rounded-xl border p-4 bg-red-50 text-red-700">
+      {{ error() }}
+    </div>
+  } @else {
+    <p-table
+      [value]="filtered()"
+      [paginator]="true"
+      [rows]="10"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      [rowHover]="true"
+      [responsiveLayout]="'scroll'"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Name</th>
+          <th>Origin</th>
+          <th>Intelligence</th>
+          <th>Affection</th>
+          <th>Energy</th>
+          <th>Child</th>
+          <th>Dog</th>
+          <th>Rare</th>
+          <th>Life span</th>
+          <th>Weight</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-r>
+        <tr [class.bg-emerald-50]="isFrom(r)">
+          <td class="font-semibold">{{ r.name }}</td>
+          <td>{{ r.origin || '—' }}</td>
+          <td>{{ r.intelligence ?? '—' }}</td>
+          <td>{{ r.affection_level ?? '—' }}</td>
+          <td>{{ r.energy_level ?? '—' }}</td>
+          <td>{{ r.child_friendly ?? '—' }}</td>
+          <td>{{ r.dog_friendly ?? '—' }}</td>
+          <td>
+            @if (r.rare) { <p-tag value="Rare"></p-tag> } @else { — }
+          </td>
+          <td>{{ r.life_span || '—' }}</td>
+          <td>{{ r.weight_metric || '—' }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  }
+</section>
