@@ -28,7 +28,7 @@ El proyecto cumple con los lineamientos de una **prueba técnica Frontend Senior
 
 ### 1️⃣ Clonar el repositorio
 ```bash
-git clone https://github.com/tu-usuario/cat-breeds-explorer.git
+git clone https://github.com/ferms/Cat-Explorer.git
 cd cat-breeds-explorer
 ```
 
