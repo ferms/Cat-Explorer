@@ -1,34 +1,43 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { PaginatorModule } from 'primeng/paginator';
+import { PaginatorModule, type PaginatorState } from 'primeng/paginator';
+import { SkeletonModule } from 'primeng/skeleton';
 
 import { CatsCardComponent } from '@shared/components/cards/cats-card';
 import { CatsFiltersComponent } from '@shared/components/filters/cats-filters';
 import { CatsStore } from '@core/services/cats-store.service';
-import { SkeletonModule } from 'primeng/skeleton';
 
 @Component({
   standalone: true,
   imports: [CatsCardComponent, CatsFiltersComponent, PaginatorModule, SkeletonModule],
   templateUrl: './cats-dashboard.page.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CatsDashboardPage implements OnInit {
+export class CatsDashboardPage {
   readonly store = inject(CatsStore);
   private readonly router = inject(Router);
 
-  ngOnInit() {
-    this.store.loadBreeds();
+  readonly skeletonItems = Array.from({ length: 9 }, (_, i) => i);
+  readonly rowsPerPageOptions: number[] = [9, 18, 27];
+
+  constructor() {
+    effect(() => {
+      this.store.loadBreeds();
+    });
   }
 
-  onPage(e: any) {
-    this.store.setPageSize(e.rows);
-    this.store.setPage(e.page + 1);
+  onPage({ rows, page }: PaginatorState): void {
+    const nextPage = (page ?? 0) + 1;
+
+    if (rows != null) this.store.setPageSize(rows);
+    this.store.setPage(nextPage);
   }
 
-  goToDetail(id: string) {
+  goToDetail(id: string): void {
     this.router.navigate(['/app/cats', id]);
   }
-  clearAll() {
+
+  clearAll(): void {
     this.store.setSearch('');
     this.store.setBreedIds([]);
     this.store.setSort('az');

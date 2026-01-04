@@ -64,7 +64,6 @@ export class AppFooter implements AfterViewInit {
         const g = d[i + 1];
         const b = d[i + 2];
 
-        // 1) Quitar negros
         if (r < BLACK_T && g < BLACK_T && b < BLACK_T) {
           d[i + 3] = 0;
           continue;

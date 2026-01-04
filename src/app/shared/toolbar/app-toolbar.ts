@@ -4,11 +4,13 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { ButtonModule } from 'primeng/button';
 import { AvatarModule } from 'primeng/avatar';
 import { AuthService } from '@core/auth/auth.service';
+import { TooltipModule } from 'primeng/tooltip';
+
 
 @Component({
   selector: 'app-toolbar',
   standalone: true,
-  imports: [ToolbarModule, ButtonModule, AvatarModule],
+  imports: [ToolbarModule, ButtonModule, AvatarModule, TooltipModule ],
   templateUrl: './app-toolbar.html',
   styleUrl: './app-toolbar.scss',
 })

@@ -4,7 +4,6 @@
     <p class="text-lg text-gray-600">
       Explore detailed information about different cat breeds and find your perfect companion.
     </p>
-
   </header>
 
   <cats-filters
@@ -14,69 +13,70 @@
   />
 
   <section class="pt-10">
-    @if (store.isLoading()) {
-    <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-      @for (i of [1,2,3,4,5,6,7,8,9]; track i) {
-      <article class="rounded-3xl bg-slate-50 overflow-hidden shadow-sm">
-        <div class="relative h-56">
-          <p-skeleton height="100%" width="100%"></p-skeleton>
+    @let loading = store.isLoading();
+    @let breeds = store.viewBreeds();
+
+    @if (loading) {
+      <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        @for (i of skeletonItems; track i) {
+          <article class="rounded-3xl bg-slate-50 overflow-hidden shadow-sm">
+            <div class="relative h-56">
+              <p-skeleton height="100%" width="100%"></p-skeleton>
+            </div>
+
+            <div class="p-6 space-y-3">
+              <p-skeleton width="30%" height="12px"></p-skeleton>
+              <p-skeleton width="70%" height="18px"></p-skeleton>
+              <p-skeleton width="55%" height="14px"></p-skeleton>
+            </div>
+          </article>
+        }
+      </div>
+    } @else if (breeds.length === 0) {
+      <div class="rounded-3xl border border-slate-200 bg-white p-10 text-center">
+        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100">
+          <i class="pi pi-search text-xl text-slate-500"></i>
         </div>
 
-        <div class="p-6 space-y-3">
-          <p-skeleton width="30%" height="12px"></p-skeleton>
-          <p-skeleton width="70%" height="18px"></p-skeleton>
-          <p-skeleton width="55%" height="14px"></p-skeleton>
+        <h2 class="text-2xl font-bold text-slate-900">No results found</h2>
+        <p class="mt-2 text-slate-600">
+          Try changing your search, selecting a different breed, or clearing filters.
+        </p>
+
+        <div class="mt-6 flex items-center justify-center gap-3">
+          <button
+            class="h-11 rounded-full border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition"
+            (click)="clearAll()"
+            type="button"
+          >
+            Clear filters
+          </button>
         </div>
-      </article>
-      }
-    </div>
-    } @else if (store.viewBreeds().length === 0) {
-
-    <div class="rounded-3xl border border-slate-200 bg-white p-10 text-center">
-      <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100">
-        <i class="pi pi-search text-xl text-slate-500"></i>
       </div>
-
-      <h2 class="text-2xl font-bold text-slate-900">No results found</h2>
-      <p class="mt-2 text-slate-600">
-        Try changing your search, selecting a different breed, or clearing filters.
-      </p>
-
-      <div class="mt-6 flex items-center justify-center gap-3">
-        <button
-          class="h-11 rounded-full border border-slate-200 bg-white px-5 text-sm font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition"
-          (click)="clearAll()"
-          type="button"
-        >
-          Clear filters
-        </button>
-      </div>
-    </div>
     } @else {
-
-    <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-      @for (cat of store.viewBreeds(); track cat.id) {
-      <cats-card
-        [title]="cat.name"
-        [subtitle]="cat.subtitle"
-        [image]="cat.image || '/assets/img/cats/placeholder.jpg'"
-        (click)="goToDetail(cat.id)"
-        onKeyPress
-      />
-      }
-    </div>
+      <div class="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        @for (cat of breeds; track cat.id) {
+          <cats-card
+            [title]="cat.name"
+            [subtitle]="cat.subtitle"
+            [image]="cat.image || '/assets/img/cats/placeholder.jpg'"
+            (click)="goToDetail(cat.id)"
+            onKeyPress
+          />
+        }
+      </div>
     }
   </section>
 
   @if (!store.isLoading() && store.total() > 0) {
-  <div class="pt-4">
-    <p-paginator
-      [first]="(store.page() - 1) * store.pageSize()"
-      [rows]="store.pageSize()"
-      [totalRecords]="store.total()"
-      [rowsPerPageOptions]="[9, 18, 27]"
-      (onPageChange)="onPage($event)"
-    ></p-paginator>
-  </div>
+    <div class="pt-4">
+      <p-paginator
+        [first]="(store.page() - 1) * store.pageSize()"
+        [rows]="store.pageSize()"
+        [totalRecords]="store.total()"
+        [rowsPerPageOptions]="rowsPerPageOptions"
+        (onPageChange)="onPage($event)"
+      ></p-paginator>
+    </div>
   }
 </section>

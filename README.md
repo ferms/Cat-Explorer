@@ -164,7 +164,7 @@ api/
 ---
 
 ## ⚠️ Pendiente
-- Pipeline CI/CD (no incluido).
+- Contenerización Docker (Opcional).
 
 ---
 
